@@ -1,11 +1,11 @@
 ```mermaid
 flowchart TD
-    subgraph S3_Bucket
+    subgraph S3_Bucket1
         S3_Object_CSV[CSV File] --> Filebeat_CSV[Filebeat CSV Input]
         S3_Object_JSON[JSON File] --> Filebeat_JSON[Filebeat JSON Input]
         S3_Object_XML[XML File] --> Filebeat_XML[Filebeat XML Input]
     end
-    subgraph S3_Bucket
+    subgraph S3_Bucket2
             S3_Object_CSV[CSV File] --> Filebeat_CSV[Filebeat CSV Input]
             S3_Object_JSON[JSON File] --> Filebeat_JSON[Filebeat JSON Input]
             S3_Object_XML[XML File] --> Filebeat_XML[Filebeat XML Input]
