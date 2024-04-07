@@ -1,0 +1,5 @@
+.env
+logstash.conf
+**data*
+_doc
+**ingest-data

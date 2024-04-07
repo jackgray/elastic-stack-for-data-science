@@ -1,0 +1,13 @@
+instances:
+   - name: es01
+     dns:
+       - es01
+       - 10.6.144.71
+     ip:
+       - 10.6.144.71
+   - name: kibana
+     dns:
+       - kibana
+       - 10.6.144.71
+     ip:
+       - 10.6.144.71

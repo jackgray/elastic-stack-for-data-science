@@ -1,0 +1,6 @@
+- pipeline.id: more_redcap
+  path.config: "/usr/share/logstash/pipelines/more_redcap.cfg"
+  pipeline.workers: 1
+- pipeline.id: sxdf_redcap
+  path.config: "/usr/share/logstash/pipelines/sxdf_redcap.cfg"
+  queue.type: persisted

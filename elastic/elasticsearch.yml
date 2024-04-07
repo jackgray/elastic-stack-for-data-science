@@ -1,0 +1,5 @@
+network.host: 0.0.0.0
+
+script.painless.regex.limit-factor: 800
+# index.mapping.total_fields.limit: 2000
+node.roles: [ master, data, ingest, transform, ml, data_hot ]

@@ -1,0 +1,16 @@
+{
+  "index_patterns": ["*_redcap*"],
+  "mappings": {
+    "dynamic": "true",
+    "dynamic_templates": [
+      {
+        "numbers": {
+          "match": "[0-9]+",
+          "mapping": {
+            "type": "integer"
+          }
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,14 @@
+# Indexes text files containing list of all files in all S3 buckets
+- type: aws-s3
+  non_aws_bucket_name: bucket-manifests
+  number_of_workers: 1
+  bucket_list_interval: 10800s
+  access_key_id: ${S3_SECRET}
+  secret_access_key: ${S3_ACCESS_KEY}
+  endpoint: ${S3_ENDPOINT}
+  expand_event_list_from_field: Records
+  charset: utf-8
+  # only ingest .txt files
+  file_selectors:
+    - regex: '.*\.(?:txt)'
+      expand_event_list_from_field: 'Records'
