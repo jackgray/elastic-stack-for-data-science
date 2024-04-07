@@ -1,34 +1,17 @@
 ```mermaid
 flowchart TD
-    subgraph S3_Bucket1
-        S3_Object_CSV[CSV File] --> Filebeat_CSV[Filebeat CSV Input]
-        S3_Object_JSON[JSON File] --> Filebeat_JSON[Filebeat JSON Input]
-        S3_Object_XML[XML File] --> Filebeat_XML[Filebeat XML Input]
-    end
-    subgraph S3_Bucket2
-            S3_Object_CSV[CSV File] --> Filebeat_CSV[Filebeat CSV Input]
-            S3_Object_JSON[JSON File] --> Filebeat_JSON[Filebeat JSON Input]
-            S3_Object_XML[XML File] --> Filebeat_XML[Filebeat XML Input]
+    subgraph S3_Bucket
+        S3_Object[Object in S3 Bucket] --> Filebeat[Filebeat S3 Input]
     end
     subgraph Filebeat
-        Filebeat_CSV -- Logs --> Logstash_CSV[Logstash]
-        Filebeat_JSON -- Logs --> Logstash_JSON[Logstash]
-        Filebeat_XML -- Logs --> Logstash_XML[Logstash]
+        Filebeat -- Logs --> Logstash[Logstash]
     end
-    subgraph Logstash_CSV
-        Logstash_CSV -- Filter --> CSV_Processor[CSV Processor]
-        CSV_Processor -- Filter --> Grok_Filter_CSV[Grok Filter]
-        Grok_Filter_CSV -- Filter --> Elasticsearch[Elasticsearch]
-    end
-    subgraph Logstash_JSON
-        Logstash_JSON -- Filter --> JSON_Processor[JSON Processor]
-        JSON_Processor -- Filter --> Grok_Filter_JSON[Grok Filter]
-        Grok_Filter_JSON -- Filter --> Elasticsearch[Elasticsearch]
-    end
-    subgraph Logstash_XML
-        Logstash_XML -- Filter --> XML_Processor[XML Processor]
-        XML_Processor -- Filter --> Grok_Filter_XML[Grok Filter]
-        Grok_Filter_XML -- Filter --> Elasticsearch[Elasticsearch]
+    subgraph Logstash
+        Logstash -- Input --> S3_Input[S3 Input]
+        S3_Input -- Filter --> CSV_Processor[CSV Processor]
+        CSV_Processor -- Filter --> Grok_Filter[Grok Filter]
+        Grok_Filter -- Filter --> Date_Filter[Date Filter]
+        Date_Filter -- Output --> Elasticsearch[Elasticsearch]
     end
     subgraph Elasticsearch
         Elasticsearch -- Query --> Kibana[Kibana]
@@ -36,6 +19,7 @@ flowchart TD
     subgraph Kibana
         Kibana -- Visualization --> Dashboard[Dashboard]
     end
+
 ```
 
 
