@@ -1,3 +1,41 @@
+flowchart TD
+    subgraph S3_Bucket
+        S3_Object_CSV[CSV File] --> Filebeat_CSV[Filebeat CSV Input]
+        S3_Object_JSON[JSON File] --> Filebeat_JSON[Filebeat JSON Input]
+        S3_Object_XML[XML File] --> Filebeat_XML[Filebeat XML Input]
+    end
+    subgraph Filebeat
+        Filebeat_CSV -- Logs --> Logstash_CSV[Logstash]
+        Filebeat_JSON -- Logs --> Logstash_JSON[Logstash]
+        Filebeat_XML -- Logs --> Logstash_XML[Logstash]
+    end
+    subgraph Logstash_CSV
+        Logstash_CSV -- Filter --> CSV_Processor[CSV Processor]
+        CSV_Processor -- Filter --> Grok_Filter_CSV[Grok Filter]
+        Grok_Filter_CSV -- Filter --> Elasticsearch[Elasticsearch]
+    end
+    subgraph Logstash_JSON
+        Logstash_JSON -- Filter --> JSON_Processor[JSON Processor]
+        JSON_Processor -- Filter --> Grok_Filter_JSON[Grok Filter]
+        Grok_Filter_JSON -- Filter --> Elasticsearch[Elasticsearch]
+    end
+    subgraph Logstash_XML
+        Logstash_XML -- Filter --> XML_Processor[XML Processor]
+        XML_Processor -- Filter --> Grok_Filter_XML[Grok Filter]
+        Grok_Filter_XML -- Filter --> Elasticsearch[Elasticsearch]
+    end
+    subgraph Elasticsearch
+        Elasticsearch -- Query --> Kibana[Kibana]
+    end
+    subgraph Kibana
+        Kibana -- Visualization --> Dashboard[Dashboard]
+    end
+
+
+
+
+
+
 # Configuring the Elastic stack
 
 When first spinning up elasticsearch, you'll want to run some setup scripts, which are included as part of a setup container in the docker-compose config. Simply uncomment it, run `docker-compose up -d`, then `docker compose down` uncomment it, and run `docker compose up -d` again.
