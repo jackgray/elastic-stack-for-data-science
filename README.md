@@ -1,3 +1,4 @@
+```mermaid
 flowchart TD
     subgraph S3_Bucket
         S3_Object_CSV[CSV File] --> Filebeat_CSV[Filebeat CSV Input]
@@ -30,7 +31,7 @@ flowchart TD
     subgraph Kibana
         Kibana -- Visualization --> Dashboard[Dashboard]
     end
-
+```
 
 
 
