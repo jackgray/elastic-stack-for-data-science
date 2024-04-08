@@ -4,22 +4,25 @@ flowchart LR
     %% style A color:blue
     B[S3 Project 2] -->|Survey Files| aa
     C[S3 Project 3] -->|Survey Files| aa
-    D[S3 Project 4] -->|Survey Files| aa(Filebeat \nSurvey Pipeline)
+    D[S3 Project 4] -->|Survey Files| aa(Filebeat Input\nSurvey Pipeline)
     %% aa -->|Grok/regex parsing| b(Index 1)
     %% aa -->|Grok/regex parsing| c(Index 2)
+
+    F([File Inventories \nOutput of 'find' command on all buckets]) -->|txt files containiing\nList of object paths| ff(Filebeat Input Rule\nAll Objects & Paths)
 
     A -->|NLP Files| bb
     B -->|NLP Files| bb
     C -->|NLP Files| bb
-    D -->|NLP Files| bb(Filebeat \nNLP Pipeline)
+    D -->|NLP Files| bb(Filebeat Input\nNLP Pipeline)
 
     A -->|Psychometric Files| cc
     B -->|Psychometric Files| cc
     C -->|Psychometric Files| cc
-    D -->|Psychometric Files| cc(Filebeat \nPsychometric Pipeline)
+    D -->|Psychometric Files| cc(Filebeat Input\nPsychometric Pipeline)
 
     M(Metricbeats\nSystem/Docker Logs) --> Z
 
+    ff -->|Record of each object \n sent as separate event| Z
     aa -->|Docs split to rows\n1st Level Field Creation:\nIndex Name \nSubject ID, Visit Type, etc.| Z
     bb --> |Docs split by rows\n1st Level Field Creation:\nIndex Name \nSubj. ID, Visit Type, etc.|Z
     cc --> |Docs split by rows\n1st Level Field Creation:\nIndex Name \nSubj. ID, Visit Type, etc.| Z{Logstash\nParsing\n2nd-Level Field creation\n1st-Level Transforms}
@@ -49,7 +52,6 @@ flowchart LR
     %% C -->|One| D[Laptop]
     %% C -->|Two| E[iPhone]
     %% C -->|Three| F[fa:fa-car Car]
-  
   
 ```
 
