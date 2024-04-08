@@ -128,7 +128,7 @@ client.info()
 
 Filebeat handles the scanning of data on local and S3 storage. You can set rules on what it tries to read. In `filebeat/inputs/*.yml`, exclude filetypes that cannot be interpretted or expressed in text, such as MRI, audio, and video files. 
 
-You can also set patterns on which file extensions you want to scan, and a prefix path to only set an input to scan a specific directory.
+You can also set patterns on which file extensions you want to scan, and a prefix path to set an input to only scan a specific directory.
 
 ## Index files but drop or truncate their contents
 
