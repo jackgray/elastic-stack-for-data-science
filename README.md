@@ -1,25 +1,50 @@
 ```mermaid
-flowchart TD
-    subgraph S3_Bucket
-        S3_Object[Object in S3 Bucket] --> Filebeat[Filebeat S3 Input]
-    end
-    subgraph Filebeat
-        Filebeat -- Logs --> Logstash[Logstash]
-    end
-    subgraph Logstash
-        Logstash -- Input --> S3_Input[S3 Input]
-        S3_Input -- Filter --> CSV_Processor[CSV Processor]
-        CSV_Processor -- Filter --> Grok_Filter[Grok Filter]
-        Grok_Filter -- Filter --> Date_Filter[Date Filter]
-        Date_Filter -- Output --> Elasticsearch[Elasticsearch]
-    end
-    subgraph Elasticsearch
-        Elasticsearch -- Query --> Kibana[Kibana]
-    end
-    subgraph Kibana
-        Kibana -- Visualization --> Dashboard[Dashboard]
-    end
+flowchart LR
+    A[S3 Project 1] -->|Survey Files| aa
+    %% style A color:blue
+    B[S3 Project 2] -->|Survey Files| aa
+    C[S3 Project 3] -->|Survey Files| aa
+    D[S3 Project 4] -->|Survey Files| aa(Filebeat \nSurvey Pipeline)
+    %% aa -->|Grok/regex parsing| b(Index 1)
+    %% aa -->|Grok/regex parsing| c(Index 2)
 
+    A -->|NLP Files| bb
+    B -->|NLP Files| bb
+    C -->|NLP Files| bb
+    D -->|NLP Files| bb(Filebeat \nNLP Pipeline)
+
+    A -->|Psychometric Files| cc
+    B -->|Psychometric Files| cc
+    C -->|Psychometric Files| cc
+    D -->|Psychometric Files| cc(Filebeat \nPsychometric Pipeline)
+
+    M(Metricbeats\nSystem/Docker Logs) --> Z
+
+    aa -->|Docs split to rows\n1st Level Field Creation\nIndex Name| Z
+    bb --> |Docs split by rows\n1st Level Field Creation\nIndex Name|Z
+    cc --> |Docs split by rows\n1st Level Field Creation\nIndex Name| Z{Logstash\nParsing/Field creation\nTransforms}
+
+
+    Z -->|Grok/regex parsing\nIndex name| E1(Elasticsearch \nNLP Index)
+    Z -->|Grok/regex parsing\nIndex name| E2(Elasticsearch \nSurvey Index)
+    Z -->|Grok/regex parsing\nIndex name| E3(Elasticsearch \nPsychometric Task Index)
+
+    Z -->|Metricbeat Stream| E4(Automatic Index Creation)
+
+    E1 --> K
+    E2 --> K
+    E3 --> K
+    E4 --> K[Elasticsearch API\nKibana Dashboards]
+    
+    SQL([SQL Queries]) --> K
+    Spark([Spark ETLs]) --> K
+    %% \nExport to Postgres]
+    
+    %% B --> C{Let me think}
+    %% C -->|One| D[Laptop]
+    %% C -->|Two| E[iPhone]
+    %% C -->|Three| F[fa:fa-car Car]
+  
 ```
 
 
