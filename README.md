@@ -20,9 +20,9 @@ flowchart LR
 
     M(Metricbeats\nSystem/Docker Logs) --> Z
 
-    aa -->|Docs split to rows\n1st Level Field Creation\nIndex Name| Z
-    bb --> |Docs split by rows\n1st Level Field Creation\nIndex Name|Z
-    cc --> |Docs split by rows\n1st Level Field Creation\nIndex Name| Z{Logstash\nParsing/Field creation\nTransforms}
+    aa -->|Docs split to rows\n1st Level Field Creation:\nIndex Name \nSubject ID, Visit Type, etc.| Z
+    bb --> |Docs split by rows\n1st Level Field Creation:\nIndex Name \nSubj. ID, Visit Type, etc.|Z
+    cc --> |Docs split by rows\n1st Level Field Creation:\nIndex Name \nSubj. ID, Visit Type, etc.| Z{Logstash\nParsing/Field creation\nTransforms}
 
 
     Z -->|Grok/regex parsing\nIndex name| E1(Elasticsearch \nNLP Index)
@@ -53,7 +53,8 @@ flowchart LR
 ```
 
 
-
+# Using the Elastic Stack for Research Data
+Above is a simple example of how you can configure data pipelines from multiple S3 and local file sources using common parsing patterns and funnel them into organized indexes for fast free-text searches across categories and projects.
 
 
 # Configuring the Elastic stack
