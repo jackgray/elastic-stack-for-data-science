@@ -35,9 +35,14 @@ flowchart LR
     E2 --> K
     E3 --> K
     E4 --> K[Elasticsearch API\nKibana Dashboards]
-    
+
+    K -->|Transforms & \nAggregations| Aggs(Aggregation \nIndex 1)
+    K -->|Transforms & \nAggregations| Aggs2(Aggregation \nIndex 2)
     SQL([SQL Queries]) --> K
+    SQL -->|SQL Queries| Aggs
+    SQL --> |SQL Queries| Aggs2
     Spark([Spark ETLs]) --> K
+
     %% \nExport to Postgres]
     
     %% B --> C{Let me think}
