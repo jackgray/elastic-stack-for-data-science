@@ -1,50 +1,109 @@
 ```mermaid
+---
+title: Data Lifecycle of Files in S3
+---
 flowchart LR
+    subgraph S3[Filebeat/Step 1: Break files into lines, add fields from filenames and parsed contents. ]
     A[S3 Project 1] -->|Survey Files| aa
     %% style A color:blue
     B[S3 Project 2] -->|Survey Files| aa
     C[S3 Project 3] -->|Survey Files| aa
-    D[S3 Project 4] -->|Survey Files| aa(Filebeat Input\nSurvey Pipeline)
+    D[S3 Project 4] -->|Survey Files| aa(Filebeat Input 2\nSurvey Pipeline)
+    
+    style aa fill:lightblue,color:black
     %% aa -->|Grok/regex parsing| b(Index 1)
     %% aa -->|Grok/regex parsing| c(Index 2)
 
-    F([File Inventories \nOutput of 'find' command on all buckets]) -->|txt files containiing\nList of object paths| ff(Filebeat Input Rule\nAll Objects & Paths)
+    F([File Inventories \nOutput of 'find' command on all buckets]) -->|txt files containiing\nList of object paths| ff(Filebeat Input 1\nAll Objects & Paths)
+    style ff fill:#FFD580
+
+    SQS([Event notifications \nFile Added/Removed]) --> ff
 
     A -->|NLP Files| bb
     B -->|NLP Files| bb
     C -->|NLP Files| bb
-    D -->|NLP Files| bb(Filebeat Input\nNLP Pipeline)
-
+    D -->|NLP Files| bb(Filebeat Input 3\nNLP Pipeline)
+    style bb fill:pink,color:black
     A -->|Psychometric Files| cc
     B -->|Psychometric Files| cc
     C -->|Psychometric Files| cc
-    D -->|Psychometric Files| cc(Filebeat Input\nPsychometric Pipeline)
-
+    D -->|Psychometric Files| cc(Filebeat Input 4\nPsychometric Pipeline)
+    style cc fill:lightgreen
+    end
     M(Metricbeats\nSystem/Docker Logs) --> Z
 
+    subgraph Logstash[Logstash/Step 2: Parse contents of events further. Use existing and custom Grok filters to capture fields]
     ff -->|Record of each object \n sent as separate event| Z
-    aa -->|Docs split to rows\n1st Level Field Creation:\nIndex Name \nSubject ID, Visit Type, etc.| Z
-    bb --> |Docs split by rows\n1st Level Field Creation:\nIndex Name \nSubj. ID, Visit Type, etc.|Z
+    aa --> |Field names are the thread...| Z
+    bb --> |Create fields in filebeat...|Z
     cc --> |Docs split by rows\n1st Level Field Creation:\nIndex Name \nSubj. ID, Visit Type, etc.| Z{Logstash\nParsing\n2nd-Level Field creation\n1st-Level Transforms}
 
+    end
+    subgraph Elasticsearch/Kibana[Elasticsearch/Step 3: Output parsed and transformed events to their respective indices]
 
-    Z -->|Grok/regex parsing\nIndex name| E1(Elasticsearch \nNLP Index)
-    Z -->|Grok/regex parsing\nIndex name| E2(Elasticsearch \nSurvey Index)
-    Z -->|Grok/regex parsing\nIndex name| E3(Elasticsearch \nPsychometric Task Index)
-
-    Z -->|Metricbeat Stream| E4(Automatic Index Creation)
-
+    Z -->|...to tag them to the right index| E1[(Elasticsearch \nNLP Index)]
+    Z --> |...that tie events to their streams|E2(Elasticsearch \nSurvey Index)
+    Z --> E3[(Elasticsearch \nPsychometric Task Index)]
+    Z -->|Metricbeat Stream| E4[(Elasticsearch\nAutomatic Index Creation)]
+    Z -->|File inventory|E5[(Elasticsearch\nFile Inventory Index)]
+    style E2 fill:lightblue
+    style E3 fill:lightgreen
+    style E1 fill:pink
+    style E5 fill:#FFD580
     E1 --> K
     E2 --> K
     E3 --> K
-    E4 --> K[Elasticsearch API\nKibana Dashboards]
+    E5 --> K
+    E4 --> K([ \nKibana\nElasticSearch \n\n ])
 
-    K -->|Transforms & \nAggregations| Aggs(Aggregation \nIndex 1)
-    K -->|Transforms & \nAggregations| Aggs2(Aggregation \nIndex 2)
-    SQL([SQL Queries]) --> K
-    SQL -->|SQL Queries| Aggs
-    SQL --> |SQL Queries| Aggs2
-    Spark([Spark ETLs]) --> K
+    
+    K <--> Aggs[(Transformed Index 1\nFormatted Eye-tracking)]
+    K <--> Aggs2[(Transformed Index 2\nScored Assessments)]
+    K <--> Aggs3[(Aggregated/\nTransformed Index 3\nTable 1)]
+    K <--> Agg4[(Aggregated Index 4\nCross-study\nBorrowed Visit Data)]
+    %% SQL([SQL Queries\nDAG Scheduler ETLs]) --> K
+    end
+    %% SQL --> Aggs
+    %% SQL --> Aggs2
+    %% Aggs --> K
+    %% Aggs2 --> K
+    %% Aggs3 --> K
+    
+
+    subgraph Spark [Advanced Transforms]
+    %% ETL([DAG Scheduler ETLs\nElasticsearchPython Client]) --> K
+    K --> ETL([DAG Scheduler ETLs\nElasticsearch Python Client\nSpark + Postgres connector])
+
+    ETL -->|modeled data| PG[(PostgreSQL\nDatabase)]
+    ETL --> CSV[(Exported CSV)]
+    PG --> CSV
+
+    end
+    CSV --> U6[User]
+
+    subgraph LR Query [Consuming: Query Methods]
+    ESQL[Elasticsearch SQL] --> K
+    FT[Free-text\nKibana Discover] --> K
+    MR[Mirage Query Builder \nLucene/DSL] --> K
+    PG --> CH[Clickhouse/Tabix\nSQL DB Aggregation]
+    %% CH --> A
+    K --> BB[Budibase\nCustom No-code \nApp Builder]
+    PG --> BB
+    BB --> CSV
+    end
+    
+    subgraph LR User [Users]
+    U1[User 1] <--> CH
+    %% U1 --> BB
+    U2[User 2] <--> BB
+    U3[User 3] <--> MR
+    U4[User 4] <--> FT
+    U5[User 5] <--> ESQL
+    %% CSV --> U1
+    %% CSV --> U2
+    %% CSV --> U3
+    end
+    %% Spark([Spark ETLs]) --> K
 
     %% \nExport to Postgres]
     
@@ -52,6 +111,7 @@ flowchart LR
     %% C -->|One| D[Laptop]
     %% C -->|Two| E[iPhone]
     %% C -->|Three| F[fa:fa-car Car]
+  
   
 ```
 
