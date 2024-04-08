@@ -22,7 +22,7 @@ flowchart LR
 
     aa -->|Docs split to rows\n1st Level Field Creation:\nIndex Name \nSubject ID, Visit Type, etc.| Z
     bb --> |Docs split by rows\n1st Level Field Creation:\nIndex Name \nSubj. ID, Visit Type, etc.|Z
-    cc --> |Docs split by rows\n1st Level Field Creation:\nIndex Name \nSubj. ID, Visit Type, etc.| Z{Logstash\nParsing/Field creation\nTransforms}
+    cc --> |Docs split by rows\n1st Level Field Creation:\nIndex Name \nSubj. ID, Visit Type, etc.| Z{Logstash\nParsing\n2nd-Level Field creation\n1st-Level Transforms}
 
 
     Z -->|Grok/regex parsing\nIndex name| E1(Elasticsearch \nNLP Index)
@@ -49,6 +49,7 @@ flowchart LR
     %% C -->|One| D[Laptop]
     %% C -->|Two| E[iPhone]
     %% C -->|Three| F[fa:fa-car Car]
+  
   
 ```
 
