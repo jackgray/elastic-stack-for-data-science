@@ -59,6 +59,14 @@ flowchart LR
 # Using the Elastic Stack for Research Data
 Above is a simple example of how you can configure data pipelines from multiple S3 and local file sources using common parsing patterns and funnel them into organized indexes for fast free-text searches across categories and projects.
 
+Files are first scanned from S3 buckets by Filebeat based on input settings defining a bucket, path to start from, and regex patterns to match filenames to include or exclude. 
+
+They are usually read and sent to Logstash line by line, or json object by object, or csv row by row, or if multiline processors are defined, multiple lines or objects can be grouped into a single event.
+
+Fields can be created both before and after being sent to Logstash, allowing specific ruled to be applied based on input, and blanket parsing rules to be applied on all events.
+
+Field creation is a good way to control streaming trajectories for various events. Create a field at the input to group events in logstash into respective indices when they are output to Elasticsearch.
+
 
 # Configuring the Elastic stack
 
