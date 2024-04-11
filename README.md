@@ -106,11 +106,6 @@ flowchart LR
     %% Spark([Spark ETLs]) --> K
 
     %% \nExport to Postgres]
-    
-    %% B --> C{Let me think}
-    %% C -->|One| D[Laptop]
-    %% C -->|Two| E[iPhone]
-    %% C -->|Three| F[fa:fa-car Car]
   
   
 ```
@@ -123,14 +118,14 @@ Files are first scanned from S3 buckets by Filebeat based on input settings defi
 
 They are usually read and sent to Logstash line by line, or json object by object, or csv row by row, or if multiline processors are defined, multiple lines or objects can be grouped into a single event.
 
-Fields can be created both before and after being sent to Logstash, allowing specific ruled to be applied based on input, and blanket parsing rules to be applied on all events.
+Fields can be created both before and after being sent to Logstash, allowing specific rules to be applied based on input, and blanket parsing rules to be applied on all events.
 
 Field creation is a good way to control streaming trajectories for various events. Create a field at the input to group events in logstash into respective indices when they are output to Elasticsearch.
 
 
 # Configuring the Elastic stack
 
-When first spinning up elasticsearch, you'll want to run some setup scripts, which are included as part of a setup container in the docker-compose config. Simply uncomment it, run `docker-compose up -d`, then `docker compose down` uncomment it, and run `docker compose up -d` again.
+When first spinning up elasticsearch, you'll want to run some setup scripts, which are included as part of a setup container in the docker-compose config. Simply uncomment it, run `docker-compose up -d`, then `docker compose down`, comment it out, and run `docker compose up -d` again.
 
 
 
