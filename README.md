@@ -42,7 +42,7 @@ flowchart LR
     subgraph Elasticsearch/Kibana[Elasticsearch/Step 3: Output parsed and transformed events to their respective indices]
 
     Z -->|...to tag them to the right index| E1[(Elasticsearch \nNLP Index)]
-    Z --> |...that tie events to their streams|E2(Elasticsearch \nSurvey Index)
+    Z --> |...that tie events to their streams|E2[(Elasticsearch \nSurvey Index)]
     Z --> E3[(Elasticsearch \nPsychometric Task Index)]
     Z -->|Metricbeat Stream| E4[(Elasticsearch\nAutomatic Index Creation)]
     Z -->|File inventory|E5[(Elasticsearch\nFile Inventory Index)]
